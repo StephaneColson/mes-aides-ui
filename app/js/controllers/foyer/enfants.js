@@ -1,10 +1,11 @@
 'use strict';
 
-angular.module('ddsApp').controller('FoyerEnfantsCtrl', function($scope, $location, $anchorScroll, $timeout) {
+angular.module('ddsApp').controller('FoyerEnfantsCtrl', function($scope, $location, $anchorScroll, $timeout, SituationService) {
     $scope.enfants = _.filter($scope.situation.individus, { role: 'enfant' });
 
     $scope.$on('individu.enfant', function(e, enfant) {
         $scope.enfants.push(enfant);
+        SituationService.setEnfants($scope.situation, $scope.enfants);
         $scope.displayForm = false;
         var addEnfantButton = document.querySelector('.new-entity');
         addEnfantButton.focus();
@@ -19,12 +20,16 @@ angular.module('ddsApp').controller('FoyerEnfantsCtrl', function($scope, $locati
         $timeout(function() { $anchorScroll('new'); });
     };
 
+    $scope.showEnfant = function() {
+        $scope.displayForm = true;
+    };
+
     $scope.removeEnfant = function(enfant) {
         var index = $scope.enfants.indexOf(enfant);
         $scope.enfants.splice(index, 1);
     };
 
     $scope.validate = function() {
-        $scope.$emit('enfants', $scope.enfants);
+        $state.go('foyer.conjoint');
     };
 });

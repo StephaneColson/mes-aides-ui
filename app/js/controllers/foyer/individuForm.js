@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('ddsApp').controller('FoyerIndividuFormCtrl', function($scope, individuRole, situationsFamiliales, specificSituations, SituationService, IndividuService) {
+angular.module('ddsApp').controller('FoyerIndividuFormCtrl', function($scope, $stateParams, individuRole, situationsFamiliales, specificSituations, SituationService, IndividuService) {
     $scope.specificSituations = specificSituations;
     $scope.situationsFamiliales = situationsFamiliales;
     $scope.today = moment();
@@ -94,18 +94,23 @@ angular.module('ddsApp').controller('FoyerIndividuFormCtrl', function($scope, in
     }
 
     var isIndividuParent = IndividuService.isRoleParent(individuRole);
-    $scope.individu = isIndividuParent && _.find($scope.situation.individus, { role: individuRole }) || _.cloneDeep(DEFAULT_INDIVIDU);
+    var id = individuRole == 'enfant' ? $stateParams.enfantId : individuRole;
+    $scope.individu = _.find($scope.situation.individus, { id: id });
 
-    if (individuRole == 'enfant') {
-        var nextEnfantCount = $scope.enfants.length + 1;
-        $scope.individu.firstName = 'Votre ' + nextEnfantCount + (nextEnfantCount === 1 ? 'ᵉʳ' : 'ᵉ' ) + ' enfant';
+    if (! $scope.individu) {
+        $scope.individu = _.cloneDeep(DEFAULT_INDIVIDU);
 
-        var usedIds = $scope.enfants.map(function(enfant) { return enfant.id; });
-        var count = 0;
-        while (_.indexOf(usedIds, 'enfant_' + count) >= 0) {
-            count = count + 1;
+        if (individuRole == 'enfant') {
+            var nextEnfantCount = $scope.enfants.length + 1;
+            $scope.individu.firstName = 'Votre ' + nextEnfantCount + (nextEnfantCount === 1 ? 'ᵉʳ' : 'ᵉ' ) + ' enfant';
+
+            var usedIds = $scope.enfants.map(function(enfant) { return enfant.id; });
+            var count = 0;
+            while (_.indexOf(usedIds, 'enfant_' + count) >= 0) {
+                count = count + 1;
+            }
+            $scope.individu.id = 'enfant_' + count;
         }
-        $scope.individu.id = 'enfant_' + count;
     }
 
     $scope.individu.specificSituations.forEach(function(specificSituation) {

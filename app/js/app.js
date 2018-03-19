@@ -192,6 +192,16 @@ ddsApp.config(function($locationProvider, $stateProvider, $urlRouterProvider, $u
                 'enfantForm@foyer.enfants': individuFormView('enfant'),
             }
         })
+        .state('foyer.enfant', {
+            url: '/enfant/:enfantId',
+            views: {
+                '': {
+                    templateUrl: '/partials/foyer/enfant.html',
+                    controller: 'FoyerEnfantCtrl'
+                },
+                'individuForm@foyer.enfant': individuFormView('enfant'),
+            }
+        })
         .state('foyer.logement', {
             url: '/logement',
             templateUrl: '/partials/foyer/logement.html',

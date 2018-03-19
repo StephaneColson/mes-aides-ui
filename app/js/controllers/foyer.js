@@ -43,11 +43,6 @@ angular.module('ddsApp').controller('FoyerCtrl', function($scope, $state, $state
         $state.go('foyer.logement');
     });
 
-    $scope.$on('enfants', function(e, enfants) {
-        SituationService.setEnfants(situation, enfants);
-        $state.go('foyer.conjoint');
-    });
-
     $scope.$on('logement', function(e) {
         $scope.$broadcast('logementCaptured');
         $state.go('foyer.ressources.individu.types', { individu: 0 });
