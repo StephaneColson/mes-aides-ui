@@ -37,8 +37,8 @@ function allocateIndividualsToEntities(situation) {
 }
 
 function setNonInjectedPrestations(testCase, periods, value) {
-    var prestationsFinancieres = _.pickBy(common.requestedVariables, function(definition) {
-        return (! definition.type) || definition.type === 'float';
+    var prestationsFinancieres = _.pickBy(common.requestedVariables, function(definition, definitionName) {
+        return ((! definition.type) || definition.type === 'float') && definitionName != 'aah';
     });
 
     _.forEach(prestationsFinancieres, function(definition, prestationName) {
